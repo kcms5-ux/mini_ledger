@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>지출 추가</h1>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <!-- ✅ 추가: 폼을 p 태그 단위로 자동 출력 -->
+    {{ form.as_p }}
+
+    <button type="submit">저장</button>
+    <!-- ✅ 추가: 취소(목록으로 돌아가기) -->
+    <a href="{% url 'expense_list' %}" style="margin-left:8px;">취소</a>
+  </form>
+{% endblock %}

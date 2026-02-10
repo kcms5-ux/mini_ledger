@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>내 지출 목록</h1>
+
+  <p>
+    <a class="btn" href="{% url 'expense_create' %}">+ 지출 추가</a>
+  </p>
+
+  {% if expenses %}
+    <table>
+      <thead>
+        <tr>
+          <th>날짜</th>
+          <th>카테고리</th>
+          <th>금액</th>
+          <th>메모</th>
+          <th>상세</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for e in expenses %}
+          <tr>
+            <td>{{ e.spent_at }}</td>
+            <td>{{ e.get_category_display }}</td>
+            <td>{{ e.amount }}</td>
+            <td>{{ e.memo }}</td>
+            <td>
+              <a class="btn btn--ghost" href="{% url 'expense_detail' e.id %}">보기</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>아직 지출이 없어요. “지출 추가”로 하나 등록해보세요!</p>
+  {% endif %}
+{% endblock %}
