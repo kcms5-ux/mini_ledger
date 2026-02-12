@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>내 계좌</h1>
+
+  <div class="actions" style="margin-bottom:14px;">
+    <a class="btn" href="{% url 'account_create' %}">+ 계좌 추가</a>
+    <a class="btn btn--ghost" href="{% url 'expense_list' %}">거래 보기</a>
+  </div>
+
+  {% if accounts %}
+    <table>
+      <thead>
+        <tr>
+          <th>별칭</th>
+          <th>기관</th>
+          <th>번호</th>
+          <th>상태</th>
+          <th>관리</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in accounts %}
+          <tr>
+            <td>{{ a.name }}</td>
+            <td>{{ a.institution|default:"-" }}</td>
+            <td>{{ a.masked_number|default:"-" }}</td>
+            <td>{% if a.is_active %}사용{% else %}비활성{% endif %}</td>
+            <td>
+              <a class="btn btn--ghost" href="{% url 'account_update' a.id %}">수정</a>
+              <a class="btn btn--ghost" href="{% url 'account_delete' a.id %}">삭제</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>아직 계좌가 없어요. “계좌 추가”로 하나 만들어보세요!</p>
+  {% endif %}
+{% endblock %}

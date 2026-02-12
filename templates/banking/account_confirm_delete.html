@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>계좌 삭제</h1>
+
+  <p>
+    정말로 <strong>{{ account }}</strong> 계좌를 삭제할까요?
+  </p>
+
+  <p style="opacity:.8; font-size:12px;">
+    연결된 거래는 계좌가 삭제되면 “계좌 없음” 상태로 남을 수 있어요.
+  </p>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="actions">
+      <button class="btn" type="submit">삭제</button>
+      <a class="btn btn--ghost" href="{% url 'account_list' %}">취소</a>
+    </div>
+  </form>
+{% endblock %}

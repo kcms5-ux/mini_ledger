@@ -4,12 +4,13 @@ from django.conf import settings
 
 class Expense(models.Model):
     """
-    지출(Expense) 모델
-    - category: 카테고리(선택지 고정)
-    - amount: 지출 금액(양수)
-    - memo: 메모(선택)
-    - spent_at: 날짜
+    지금은 모델명이 Expense지만, 실제 역할은 '거래(Transaction)'에 가까움.
+    - tx_type: IN(수입) / OUT(지출)
     """
+
+    class TxType(models.TextChoices):
+        IN = "IN", "수입"
+        OUT = "OUT", "지출"
 
     class Category(models.TextChoices):
         FOOD = "FOOD", "음식/식비"
@@ -24,7 +25,21 @@ class Expense(models.Model):
         related_name="expenses",
     )
 
-    # ✅ 추가: 카테고리(드롭다운 선택)
+    account = models.ForeignKey(
+        "banking.Account",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="expenses",
+    )
+
+    # ✅ 추가: 수입/지출 타입 (기존 데이터 보호를 위해 기본값은 OUT)
+    tx_type = models.CharField(
+        max_length=3,
+        choices=TxType.choices,
+        default=TxType.OUT,
+    )
+
     category = models.CharField(
         max_length=20,
         choices=Category.choices,
@@ -37,4 +52,4 @@ class Expense(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return f"{self.user} | {self.category} | {self.amount} | {self.spent_at}"
+        return f"{self.user} | {self.tx_type} | {self.category} | {self.amount} | {self.spent_at}"

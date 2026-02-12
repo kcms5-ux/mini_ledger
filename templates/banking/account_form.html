@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% if mode == "create" %}
+    <h1>계좌 추가</h1>
+  {% else %}
+    <h1>계좌 수정</h1>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <div class="actions">
+      <button class="btn" type="submit">저장</button>
+      <a class="btn btn--ghost" href="{% url 'account_list' %}">취소</a>
+    </div>
+  </form>
+{% endblock %}

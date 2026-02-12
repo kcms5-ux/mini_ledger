@@ -5,13 +5,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mini Ledger</title>
-
-  <!-- ✅ CSS 파일 연결 -->
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body>
-  <!-- 상단 헤더 -->
   <header class="topbar">
     <div class="container topbar__inner">
       <a class="brand" href="/expenses/">
@@ -22,13 +19,16 @@
       <nav class="nav">
         <a class="nav__link" href="/expenses/">지출</a>
         <a class="nav__link" href="/expenses/new/">추가</a>
+        <a class="nav__link" href="{% url 'dashboard' %}">대시보드</a>
+
+        <!-- ✅ 추가: 계좌 관리 -->
+        <a class="nav__link" href="{% url 'account_list' %}">계좌</a>
       </nav>
 
       <div class="auth">
         {% if user.is_authenticated %}
           <span class="auth__user">{{ user.username }}</span>
 
-          <!-- 로그아웃은 POST -->
           <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
             <button class="btn btn--ghost" type="submit">로그아웃</button>
@@ -41,14 +41,13 @@
     </div>
   </header>
 
-  <!-- 본문 -->
   <main class="container">
     <div class="card">
       {% block content %}{% endblock %}
     </div>
 
     <footer class="footer">
-      <span>© {{ now|date:"Y" }} Mini Ledger</span>
+      <span>© Mini Ledger</span>
     </footer>
   </main>
 </body>

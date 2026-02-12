@@ -1,17 +1,64 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>내 지출 목록</h1>
+  <h1>내 거래 목록</h1>
 
-  <p>
-    <a class="btn" href="{% url 'expense_create' %}">+ 지출 추가</a>
-  </p>
+  <form method="get" class="card" style="margin-bottom:16px;">
+    <div style="display:grid; grid-template-columns: 1.2fr 1fr 1fr; gap:12px;">
+      <div>
+        <label>카테고리</label>
+        <select name="category">
+          <option value="">전체</option>
+          {% for value, label in categories %}
+            <option value="{{ value }}" {% if filter.category == value %}selected{% endif %}>
+              {{ label }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label>시작일</label>
+        <input type="date" name="from" value="{{ filter.from }}">
+      </div>
+
+      <div>
+        <label>종료일</label>
+        <input type="date" name="to" value="{{ filter.to }}">
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1.2fr 1fr 1fr; gap:12px; margin-top:12px;">
+      <div>
+        <label>메모 검색</label>
+        <input type="text" name="q" placeholder="예: 커피, 점심" value="{{ filter.q }}">
+      </div>
+
+      <div>
+        <label>최소 금액</label>
+        <input type="number" name="min" placeholder="예: 1000" value="{{ filter.min }}">
+      </div>
+
+      <div>
+        <label>최대 금액</label>
+        <input type="number" name="max" placeholder="예: 20000" value="{{ filter.max }}">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn" type="submit">적용</button>
+      <a class="btn btn--ghost" href="{% url 'expense_list' %}">초기화</a>
+      <a class="btn btn--ghost" href="{% url 'expense_create' %}">+ 거래 추가</a>
+    </div>
+  </form>
 
   {% if expenses %}
     <table>
       <thead>
         <tr>
           <th>날짜</th>
+          <th>계좌</th>
+          <th>구분</th>
           <th>카테고리</th>
           <th>금액</th>
           <th>메모</th>
@@ -23,6 +70,8 @@
         {% for e in expenses %}
           <tr>
             <td>{{ e.spent_at }}</td>
+            <td>{% if e.account %}{{ e.account }}{% else %}-{% endif %}</td>
+            <td>{{ e.get_tx_type_display }}</td>
             <td>{{ e.get_category_display }}</td>
             <td>{{ e.amount }}</td>
             <td>{{ e.memo }}</td>
@@ -34,6 +83,6 @@
       </tbody>
     </table>
   {% else %}
-    <p>아직 지출이 없어요. “지출 추가”로 하나 등록해보세요!</p>
+    <p>조건에 맞는 거래가 없어요.</p>
   {% endif %}
 {% endblock %}
